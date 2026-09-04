@@ -1,0 +1,222 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SAPTIX ENTERPRISE DESIGN SYSTEM — Unified Theme Tokens
+   Version: 1.0.0
+   Usage: @import this file in every stake's globals.css / index.css
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Google Fonts ───────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── Light Mode (Default) ──────────────────────────────────────── */
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', var(--font-sans);
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Core Colors */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* Brand — Primary (Purple) */
+  --primary: #6d28d9;
+  --primary-hover: #5b21b6;
+  --primary-light: #a78bfa;
+  --primary-foreground: #ffffff;
+
+  /* Brand — Accent (Teal) */
+  --accent: #14b8a6;
+  --accent-hover: #0d9488;
+  --accent-light: #5eead4;
+  --accent-foreground: #042f2e;
+
+  /* Semantic */
+  --secondary: #f1f5f9;
+  --secondary-foreground: #1e293b;
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --success: #22c55e;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
+  --info: #3b82f6;
+  --info-foreground: #ffffff;
+
+  /* Borders & Rings */
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #6d28d9;
+
+  /* Radius */
+  --radius: 0.5rem;
+  --radius-sm: 0.375rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Sidebar */
+  --sidebar-bg: #f8fafc;
+  --sidebar-foreground: #334155;
+  --sidebar-active: #6d28d9;
+  --sidebar-active-bg: #ede9fe;
+  --sidebar-active-foreground: #6d28d9;
+  --sidebar-hover: #f1f5f9;
+  --sidebar-border: #e2e8f0;
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 68px;
+  --sidebar-logo-size: 32px;
+
+  /* Top Navigation */
+  --topnav-bg: #ffffff;
+  --topnav-foreground: #0f172a;
+  --topnav-border: #e2e8f0;
+  --topnav-height: 56px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-blur: 12px;
+
+  /* Animations */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Dark Mode ─────────────────────────────────────────────────── */
+.dark {
+  --background: #0a0d14;
+  --foreground: #f1f5f9;
+  --card: #111827;
+  --card-foreground: #f1f5f9;
+  --popover: #111827;
+  --popover-foreground: #f1f5f9;
+
+  --primary: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --primary-light: #c4b5fd;
+  --primary-foreground: #ffffff;
+
+  --accent: #2dd4bf;
+  --accent-hover: #5eead4;
+  --accent-light: #99f6e4;
+  --accent-foreground: #042f2e;
+
+  --secondary: #1e293b;
+  --secondary-foreground: #e2e8f0;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --success: #4ade80;
+  --success-foreground: #000000;
+  --warning: #fbbf24;
+  --warning-foreground: #000000;
+  --info: #60a5fa;
+  --info-foreground: #000000;
+
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #8b5cf6;
+
+  --sidebar-bg: #0f1219;
+  --sidebar-foreground: #94a3b8;
+  --sidebar-active: #8b5cf6;
+  --sidebar-active-bg: rgba(139, 92, 246, 0.15);
+  --sidebar-active-foreground: #c4b5fd;
+  --sidebar-hover: #1e293b;
+  --sidebar-border: #1e293b;
+
+  --topnav-bg: #0f1219;
+  --topnav-foreground: #f1f5f9;
+  --topnav-border: #1e293b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+
+  --glass-bg: rgba(15, 18, 25, 0.8);
+  --glass-border: rgba(30, 41, 59, 0.5);
+  --glass-blur: 12px;
+}
+
+/* ── Base Styles ───────────────────────────────────────────────── */
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+/* ── Utility Classes ───────────────────────────────────────────── */
+.saptix-card {
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.saptix-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.saptix-gradient-bg {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+}
+
+.saptix-gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
+
+/* ── Selection ─────────────────────────────────────────────────── */
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
