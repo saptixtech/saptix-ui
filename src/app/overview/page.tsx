@@ -1,3 +1,4 @@
+import { SaptixAppSwitcher } from "@/components/SaptixAppSwitcher";
 import { Suspense } from 'react';
 import { StandardPageLayout } from '@/components/saptix-standard/StandardPageLayout';
 import { KpiMetricGrid } from '@/components/saptix-standard/KpiMetricGrid';
