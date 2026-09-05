@@ -1,13 +1,11 @@
 "use client";
-
-import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
 interface StandardPageLayoutProps {
   title: string;
   description?: string;
-  actions?: React.ReactNode;
-  children: React.ReactNode;
-  className?: string;
+  actions?: ReactNode;
+  children: ReactNode;
 }
 
 export function StandardPageLayout({
@@ -15,22 +13,32 @@ export function StandardPageLayout({
   description,
   actions,
   children,
-  className,
 }: StandardPageLayoutProps) {
   return (
-    <div className={cn("space-y-6", className)}>
-      {/* Page Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+    <div className="flex flex-col gap-6 p-6 min-h-full">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground leading-tight">
+            {title}
+          </h1>
           {description && (
-            <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
+            <p className="mt-0.5 text-sm text-muted-foreground leading-snug">
+              {description}
+            </p>
           )}
         </div>
-        {actions && <div className="flex items-center gap-2 mt-2 sm:mt-0">{actions}</div>}
+        {actions && (
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            {actions}
+          </div>
+        )}
       </div>
-      {/* Content zones flow naturally — single vertical scroll at window level */}
-      {children}
+
+      {/* Page content */}
+      <div className="flex flex-col gap-6">
+        {children}
+      </div>
     </div>
   );
 }

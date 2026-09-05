@@ -1,32 +1,31 @@
 "use client";
-
-import { cn } from "@/lib/utils";
+import { AlertTriangleIcon, RefreshCwIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AlertTriangleIcon } from "lucide-react";
 
 interface ErrorStateProps {
   title?: string;
-  message?: string;
+  description?: string;
   onRetry?: () => void;
-  className?: string;
 }
 
 export function ErrorState({
   title = "Something went wrong",
-  message = "An unexpected error occurred. Please try again.",
+  description = "An unexpected error occurred. Please try again.",
   onRetry,
-  className,
 }: ErrorStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center py-16 px-4 text-center", className)}>
-      <div className="rounded-full bg-destructive/10 p-4 mb-4">
-        <AlertTriangleIcon className="h-10 w-10 text-destructive" />
+    <div className="flex flex-col items-center justify-center py-12 px-6 text-center gap-3">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 ring-1 ring-red-500/20">
+        <AlertTriangleIcon className="h-6 w-6 text-red-500" />
       </div>
-      <h3 className="text-lg font-semibold mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground max-w-sm mb-6">{message}</p>
+      <div className="space-y-1 max-w-xs">
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+      </div>
       {onRetry && (
-        <Button onClick={onRetry} variant="outline" size="sm">
-          Try Again
+        <Button onClick={onRetry} variant="outline" size="sm" className="gap-1.5">
+          <RefreshCwIcon className="h-3.5 w-3.5" />
+          Try again
         </Button>
       )}
     </div>

@@ -1,38 +1,35 @@
 "use client";
-
-import { cn } from "@/lib/utils";
-
-export interface TrendDataPoint {
-  name: string;
-  value: number;
-  secondary?: number;
-}
+import { ReactNode } from "react";
 
 interface TrendSummarySectionProps {
   title: string;
   subtitle?: string;
-  children: React.ReactNode;
-  actions?: React.ReactNode;
+  children: ReactNode;
   className?: string;
+  minHeight?: number;
 }
 
 export function TrendSummarySection({
   title,
   subtitle,
   children,
-  actions,
-  className,
+  className = "",
+  minHeight = 160,
 }: TrendSummarySectionProps) {
   return (
-    <div className={cn("rounded-xl border bg-card", className)}>
-      <div className="flex items-center justify-between px-6 pt-5 pb-2">
+    <div className={`rounded-xl border bg-card shadow-sm overflow-hidden ${className}`}>
+      <div className="flex items-start justify-between px-5 py-4 border-b">
         <div>
-          <h3 className="text-sm font-semibold">{title}</h3>
-          {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+          {subtitle && (
+            <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
+          )}
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
-      <div className="px-4 pb-4 h-64 md:h-72">
+      <div
+        className="p-5"
+        style={{ minHeight }}
+      >
         {children}
       </div>
     </div>

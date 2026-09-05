@@ -1,102 +1,92 @@
 "use client";
+import { useState, useCallback } from "react";
+import { SearchIcon, XIcon } from "lucide-react";
 
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SearchIcon, FilterIcon, XIcon } from "lucide-react";
-
-export type StatusFilter = "all" | "active" | "pending" | "completed" | "overdue" | "error";
-
-const STATUS_OPTIONS: { value: StatusFilter; label: string; color: string }[] = [
-  { value: "all", label: "All", color: "bg-muted text-foreground" },
-  { value: "active", label: "Active", color: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" },
-  { value: "pending", label: "Pending", color: "bg-amber-500/15 text-amber-700 dark:text-amber-400" },
-  { value: "completed", label: "Completed", color: "bg-blue-500/15 text-blue-700 dark:text-blue-400" },
-  { value: "overdue", label: "Overdue", color: "bg-red-500/15 text-red-700 dark:text-red-400" },
-  { value: "error", label: "Error", color: "bg-red-500/15 text-red-700 dark:text-red-400" },
-];
+interface FilterOption {
+  value: string;
+  label: string;
+}
 
 interface FilterBarProps {
-  searchValue: string;
+  search: string;
   onSearchChange: (value: string) => void;
-  statusFilter: StatusFilter;
-  onStatusFilterChange: (status: StatusFilter) => void;
-  viewMode?: "table" | "kanban";
-  onViewModeChange?: (mode: "table" | "kanban") => void;
-  className?: string;
+  statusFilter: string;
+  onStatusFilterChange: (value: string) => void;
+  filterOptions?: FilterOption[];
+  searchPlaceholder?: string;
+  rightSlot?: React.ReactNode;
 }
 
 export function FilterBar({
-  searchValue,
+  search,
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
-  viewMode,
-  onViewModeChange,
-  className,
+  filterOptions,
+  searchPlaceholder = "Search…",
+  rightSlot,
 }: FilterBarProps) {
+  const clearSearch = useCallback(() => onSearchChange(""), [onSearchChange]);
+
   return (
-    <div className={cn("flex flex-col sm:flex-row items-start sm:items-center gap-3 pb-4", className)}>
-      <div className="relative flex-1 min-w-0 w-full sm:max-w-sm">
-        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search..."
-          value={searchValue}
+    <div className="flex flex-wrap items-center gap-2 px-4 py-3 border-b bg-muted/20">
+      {/* Search input */}
+      <div className="relative flex-1 min-w-[160px] max-w-xs">
+        <SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+        <input
+          type="text"
+          value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9 h-9"
+          placeholder={searchPlaceholder}
           aria-label="Search"
+          className="w-full h-8 pl-8 pr-8 text-sm rounded-md border border-border/60 bg-background/80 focus:outline-none focus:ring-2 focus:ring-ring/50 placeholder:text-muted-foreground/60 transition-colors"
         />
-        {searchValue && (
+        {search && (
           <button
-            onClick={() => onSearchChange("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 rounded-sm text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Clear search"
           >
             <XIcon className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
-      <div className="flex items-center gap-1.5 flex-wrap">
-        {STATUS_OPTIONS.map((opt) => (
+
+      {/* Filter pills */}
+      {filterOptions && filterOptions.length > 0 && (
+        <div className="flex items-center gap-1 flex-wrap">
           <button
-            key={opt.value}
-            onClick={() => onStatusFilterChange(opt.value)}
-            className={cn(
-              "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition-colors cursor-pointer",
-              statusFilter === opt.value
-                ? opt.color + " ring-1 ring-current/20"
-                : "bg-muted/50 text-muted-foreground hover:bg-muted"
-            )}
-            aria-label={`Filter by ${opt.label}`}
-            aria-pressed={statusFilter === opt.value}
+            onClick={() => onStatusFilterChange("all")}
+            className={`h-7 px-2.5 rounded-full text-xs font-medium transition-colors border ${
+              statusFilter === "all"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "border-border/60 bg-background text-muted-foreground hover:text-foreground hover:border-border"
+            }`}
+            aria-label="Show all"
+            aria-pressed={statusFilter === "all"}
           >
-            {opt.label}
+            All
           </button>
-        ))}
-      </div>
-      {onViewModeChange && (
-        <div className="flex items-center gap-1 ml-auto border rounded-lg p-0.5">
-          <button
-            onClick={() => onViewModeChange("table")}
-            className={cn("px-3 py-1 rounded-md text-xs font-medium transition-colors",
-              viewMode === "table" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            )}
-            aria-label="Table view"
-          >
-            Table
-          </button>
-          <button
-            onClick={() => onViewModeChange("kanban")}
-            className={cn("px-3 py-1 rounded-md text-xs font-medium transition-colors",
-              viewMode === "kanban" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
-            )}
-            aria-label="Kanban view"
-          >
-            Kanban
-          </button>
+          {filterOptions.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => onStatusFilterChange(opt.value)}
+              className={`h-7 px-2.5 rounded-full text-xs font-medium transition-colors border capitalize ${
+                statusFilter === opt.value
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "border-border/60 bg-background text-muted-foreground hover:text-foreground hover:border-border"
+              }`}
+              aria-label={`Filter by ${opt.label}`}
+              aria-pressed={statusFilter === opt.value}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
       )}
+
+      {/* Right slot */}
+      {rightSlot && <div className="ml-auto">{rightSlot}</div>}
     </div>
   );
 }

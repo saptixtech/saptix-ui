@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { FilterBar, type StatusFilter } from "./FilterBar";
+import { FilterBar } from "./FilterBar";
 import { EmptyState } from "./EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { EditIcon, GripVerticalIcon } from "lucide-react";
@@ -50,7 +50,7 @@ export function StandardKanban({
   className,
 }: StandardKanbanProps) {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const filtered = useMemo(() => {
     let result = [...items];
@@ -74,7 +74,7 @@ export function StandardKanban({
         <EmptyState
           title="No items yet"
           description="Create your first item to get started."
-          onAction={onCreate}
+          action={onCreate ? <button onClick={onCreate} className='text-xs px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors'>Add Item</button> : undefined}
         />
       </div>
     );
@@ -83,7 +83,7 @@ export function StandardKanban({
   return (
     <div className={cn("space-y-4", className)}>
       <FilterBar
-        searchValue={search}
+        search={search}
         onSearchChange={setSearch}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}

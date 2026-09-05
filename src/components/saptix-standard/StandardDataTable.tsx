@@ -1,236 +1,208 @@
 "use client";
-
 import { useState, useMemo } from "react";
-import { cn } from "@/lib/utils";
-import { FilterBar, type StatusFilter } from "./FilterBar";
-import { TableSkeleton } from "./LoadingSkeleton";
-import { EmptyState } from "./EmptyState";
-import { ErrorState } from "./ErrorState";
-import { Button } from "@/components/ui/button";
 import {
+  ChevronUpIcon,
+  ChevronDownIcon,
+  ChevronsUpDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-  EditIcon,
-  TrashIcon,
+  PencilIcon,
+  Trash2Icon,
+  SearchIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "./EmptyState";
+import { FilterBar } from "./FilterBar";
 
 export interface ColumnDef<T> {
   id: string;
   header: string;
-  accessorKey?: keyof T;
-  cell?: (row: T) => React.ReactNode;
+  accessorKey: keyof T;
   sortable?: boolean;
+  cell?: (row: T) => React.ReactNode;
   className?: string;
 }
 
-interface StandardDataTableProps<T extends { id: string; status?: string }> {
+interface StandardDataTableProps<T extends { id: string }> {
   data: T[];
   columns: ColumnDef<T>[];
-  loading?: boolean;
-  error?: string;
-  onRetry?: () => void;
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
-  onCreate?: () => void;
   searchableKeys?: (keyof T)[];
-  pageSize?: number;
+  onEdit?: (row: T) => void;
+  onDelete?: (id: string) => void;
   emptyTitle?: string;
   emptyDescription?: string;
-  className?: string;
+  pageSize?: number;
+  filterOptions?: { value: string; label: string }[];
+  filterKey?: keyof T;
 }
 
-export function StandardDataTable<T extends { id: string; status?: string }>({
+export function StandardDataTable<T extends { id: string }>({
   data,
   columns,
-  loading = false,
-  error,
-  onRetry,
+  searchableKeys = [],
   onEdit,
   onDelete,
-  onCreate,
-  searchableKeys = [],
+  emptyTitle = "No data yet",
+  emptyDescription = "Add your first record to get started.",
   pageSize = 10,
-  emptyTitle,
-  emptyDescription,
-  className,
+  filterOptions,
+  filterKey,
 }: StandardDataTableProps<T>) {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [page, setPage] = useState(0);
-  const [sortCol, setSortCol] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortKey, setSortKey] = useState<keyof T | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {
-    let result = [...data];
-
-    // Status filter
-    if (statusFilter !== "all") {
-      result = result.filter(
-        (item) => item.status?.toLowerCase() === statusFilter
-      );
-    }
-
-    // Search filter
+    let rows = [...data];
     if (search.trim()) {
       const q = search.toLowerCase();
-      result = result.filter((item) =>
-        searchableKeys.some((key) =>
-          String((item as any)[key] ?? "")
-            .toLowerCase()
-            .includes(q)
-        )
+      rows = rows.filter((r) =>
+        searchableKeys.some((k) => String(r[k] ?? "").toLowerCase().includes(q))
       );
     }
-
-    // Sort
-    if (sortCol) {
-      const col = columns.find((c) => c.id === sortCol);
-      if (col?.accessorKey) {
-        const key = col.accessorKey;
-        result.sort((a, b) => {
-          const av = String((a as any)[key] ?? "");
-          const bv = String((b as any)[key] ?? "");
-          return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
-        });
-      }
+    if (statusFilter !== "all" && filterKey) {
+      rows = rows.filter((r) => String(r[filterKey]) === statusFilter);
     }
-
-    return result;
-  }, [data, search, statusFilter, sortCol, sortDir, columns, searchableKeys]);
+    if (sortKey) {
+      rows.sort((a, b) => {
+        const av = a[sortKey], bv = b[sortKey];
+        const cmp = typeof av === "number" && typeof bv === "number"
+          ? av - bv
+          : String(av ?? "").localeCompare(String(bv ?? ""));
+        return sortDir === "asc" ? cmp : -cmp;
+      });
+    }
+    return rows;
+  }, [data, search, statusFilter, sortKey, sortDir, searchableKeys, filterKey]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paged = filtered.slice(page * pageSize, (page + 1) * pageSize);
 
-  if (loading) {
-    return (
-      <div className={cn("rounded-xl border bg-card p-6", className)}>
-        <TableSkeleton rows={pageSize} cols={columns.length} />
-      </div>
-    );
+  function toggleSort(key: keyof T) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+    setPage(0);
   }
 
-  if (error) {
-    return (
-      <div className={cn("rounded-xl border bg-card", className)}>
-        <ErrorState message={error} onRetry={onRetry} />
-      </div>
-    );
+  function SortIcon({ col }: { col: ColumnDef<T> }) {
+    if (!col.sortable) return null;
+    if (sortKey !== col.accessorKey)
+      return <ChevronsUpDownIcon className="h-3 w-3 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />;
+    return sortDir === "asc"
+      ? <ChevronUpIcon className="h-3 w-3 text-foreground" />
+      : <ChevronDownIcon className="h-3 w-3 text-foreground" />;
   }
+
+  const showActions = !!(onEdit || onDelete);
 
   return (
-    <div className={cn("rounded-xl border bg-card", className)}>
-      <div className="p-4 pb-0">
-        <FilterBar
-          searchValue={search}
-          onSearchChange={(v) => { setSearch(v); setPage(0); }}
-          statusFilter={statusFilter}
-          onStatusFilterChange={(s) => { setStatusFilter(s); setPage(0); }}
-        />
-      </div>
+    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+      {/* Toolbar */}
+      <FilterBar
+        search={search}
+        onSearchChange={(v) => { setSearch(v); setPage(0); }}
+        statusFilter={statusFilter}
+        onStatusFilterChange={(v) => { setStatusFilter(v); setPage(0); }}
+        filterOptions={filterOptions}
+        searchPlaceholder={searchableKeys.length ? `Search by ${String(searchableKeys[0])}…` : "Search…"}
+      />
 
-      {filtered.length === 0 ? (
-        <EmptyState
-          title={emptyTitle}
-          description={emptyDescription}
-          onAction={onCreate}
-        />
-      ) : (
-        <>
-          {/* Horizontal scroll only for wide tables on mobile */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="sticky top-12 z-20 bg-background/95 backdrop-blur border-b">
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b bg-muted/40">
+              {columns.map((col) => (
+                <th
+                  key={col.id}
+                  className={`px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide whitespace-nowrap select-none ${col.sortable ? "cursor-pointer group hover:text-foreground transition-colors" : ""} ${col.className ?? ""}`}
+                  onClick={col.sortable ? () => toggleSort(col.accessorKey) : undefined}
+                  aria-sort={
+                    sortKey === col.accessorKey
+                      ? sortDir === "asc" ? "ascending" : "descending"
+                      : "none"
+                  }
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    {col.header}
+                    <SortIcon col={col} />
+                  </span>
+                </th>
+              ))}
+              {showActions && (
+                <th className="px-4 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide w-20">
+                  Actions
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border/50">
+            {paged.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length + (showActions ? 1 : 0)} className="py-12">
+                  <EmptyState title={emptyTitle} description={emptyDescription} />
+                </td>
+              </tr>
+            ) : (
+              paged.map((row) => (
+                <tr
+                  key={row.id}
+                  className="hover:bg-muted/30 transition-colors duration-100 group/row"
+                >
                   {columns.map((col) => (
-                    <th
-                      key={col.id}
-                      className={cn(
-                        "px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground",
-                        col.sortable && "cursor-pointer select-none hover:text-foreground",
-                        col.className
-                      )}
-                      onClick={() => {
-                        if (!col.sortable) return;
-                        if (sortCol === col.id) {
-                          setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                        } else {
-                          setSortCol(col.id);
-                          setSortDir("asc");
-                        }
-                      }}
-                      aria-sort={
-                        sortCol === col.id
-                          ? sortDir === "asc"
-                            ? "ascending"
-                            : "descending"
-                          : undefined
-                      }
-                    >
-                      <span className="flex items-center gap-1">
-                        {col.header}
-                        {sortCol === col.id && (
-                          <span className="text-foreground">{sortDir === "asc" ? "↑" : "↓"}</span>
-                        )}
-                      </span>
-                    </th>
+                    <td key={col.id} className={`px-4 py-3 text-sm ${col.className ?? ""}`}>
+                      {col.cell ? col.cell(row) : String(row[col.accessorKey] ?? "")}
+                    </td>
                   ))}
-                  {(onEdit || onDelete) && (
-                    <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted-foreground w-24">
-                      Actions
-                    </th>
+                  {showActions && (
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                        {onEdit && (
+                          <button
+                            onClick={() => onEdit(row)}
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label="Edit"
+                          >
+                            <PencilIcon className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                        {onDelete && (
+                          <button
+                            onClick={() => onDelete(row.id)}
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-red-500/10 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                            aria-label="Delete"
+                          >
+                            <Trash2Icon className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   )}
                 </tr>
-              </thead>
-              <tbody className="divide-y">
-                {paged.map((row) => (
-                  <tr key={row.id} className="hover:bg-muted/50 transition-colors">
-                    {columns.map((col) => (
-                      <td key={col.id} className={cn("px-4 py-3", col.className)}>
-                        {col.cell
-                          ? col.cell(row)
-                          : col.accessorKey
-                          ? String((row as any)[col.accessorKey] ?? "")
-                          : ""}
-                      </td>
-                    ))}
-                    {(onEdit || onDelete) && (
-                      <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          {onEdit && (
-                            <button
-                              onClick={() => onEdit(row)}
-                              className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                              aria-label="Edit"
-                            >
-                              <EditIcon className="h-3.5 w-3.5" />
-                            </button>
-                          )}
-                          {onDelete && (
-                            <button
-                              onClick={() => onDelete(row)}
-                              className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                              aria-label="Delete"
-                            >
-                              <TrashIcon className="h-3.5 w-3.5" />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-4 py-3 border-t">
-            <p className="text-xs text-muted-foreground">
-              Showing {page * pageSize + 1}–{Math.min((page + 1) * pageSize, filtered.length)} of{" "}
-              {filtered.length}
-            </p>
+      {/* Pagination */}
+      {filtered.length > 0 && (
+        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted/20 text-xs text-muted-foreground">
+          <span>
+            {filtered.length === data.length
+              ? `${filtered.length} total`
+              : `${filtered.length} of ${data.length} filtered`}
+            {totalPages > 1 && ` · Page ${page + 1} of ${totalPages}`}
+          </span>
+          {totalPages > 1 && (
             <div className="flex items-center gap-1">
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage(0)} disabled={page === 0} aria-label="First page">
                 <ChevronsLeftIcon className="h-3.5 w-3.5" />
@@ -238,9 +210,6 @@ export function StandardDataTable<T extends { id: string; status?: string }>({
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage((p) => p - 1)} disabled={page === 0} aria-label="Previous page">
                 <ChevronLeftIcon className="h-3.5 w-3.5" />
               </Button>
-              <span className="text-xs px-2">
-                {page + 1} / {totalPages}
-              </span>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage((p) => p + 1)} disabled={page >= totalPages - 1} aria-label="Next page">
                 <ChevronRightIcon className="h-3.5 w-3.5" />
               </Button>
@@ -248,8 +217,8 @@ export function StandardDataTable<T extends { id: string; status?: string }>({
                 <ChevronsRightIcon className="h-3.5 w-3.5" />
               </Button>
             </div>
-          </div>
-        </>
+          )}
+        </div>
       )}
     </div>
   );
