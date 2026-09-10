@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconChevronRight } from "@tabler/icons-react";
+import { ChevronRight as IconChevronRight } from 'lucide-react';
 
 export function Breadcrumb({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
   return <nav aria-label="breadcrumb" className={cn("flex items-center", className)} {...props} />;

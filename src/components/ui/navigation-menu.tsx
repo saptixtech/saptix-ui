@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconChevronDown } from "@tabler/icons-react";
+import { ChevronDown as IconChevronDown } from 'lucide-react';
 
 export interface NavMenuItem {
   title: string;

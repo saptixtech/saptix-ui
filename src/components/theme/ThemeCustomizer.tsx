@@ -92,7 +92,6 @@ export function ThemeCustomizer() {
         <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors text-lg leading-none">&times;</button>
       </div>
 
-      {/* Mode */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Mode</label>
         <div className="flex gap-2">
@@ -104,7 +103,6 @@ export function ThemeCustomizer() {
         </div>
       </div>
 
-      {/* Colors */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Color</label>
         <div className="flex flex-wrap gap-2">
@@ -117,7 +115,6 @@ export function ThemeCustomizer() {
         </div>
       </div>
 
-      {/* Font */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Font</label>
         <div className="flex flex-wrap gap-2">
@@ -129,7 +126,6 @@ export function ThemeCustomizer() {
         </div>
       </div>
 
-      {/* Radius */}
       <div className="space-y-2">
         <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Radius</label>
         <div className="flex gap-2">
@@ -141,7 +137,6 @@ export function ThemeCustomizer() {
         </div>
       </div>
 
-      {/* Reset */}
       <button onClick={() => update(DEFAULT_CONFIG)}
         className="w-full text-xs py-2 rounded-lg border border-border text-muted-foreground hover:border-destructive hover:text-destructive transition-all">
         Reset to Defaults

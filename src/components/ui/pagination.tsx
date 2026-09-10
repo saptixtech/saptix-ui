@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons-react";
+import { ChevronLeft as IconChevronLeft, ChevronRight as IconChevronRight, MoreHorizontal as IconDots } from 'lucide-react';
 
 export function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (

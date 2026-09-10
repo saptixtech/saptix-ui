@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { ChevronLeft as IconChevronLeft, ChevronRight as IconChevronRight } from 'lucide-react';
 
 export interface CalendarProps {
   className?: string;

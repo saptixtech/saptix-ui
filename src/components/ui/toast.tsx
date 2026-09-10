@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconX, IconCheck, IconAlertTriangle, IconInfoCircle } from "@tabler/icons-react";
+import { X as IconX, Check as IconCheck, AlertTriangle as IconAlertTriangle, Info as IconInfoCircle } from 'lucide-react';
 
 export interface ToastData {
   id: string;

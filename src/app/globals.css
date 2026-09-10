@@ -2,9 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ==========================================================================
-   Saptix Unified Design System v2.0
-   Shared across all 9 Stake Applications
-   Color Space: oklch | Font: Inter | Radius: 10px
+   Saptix Unified Design System v2.0 - OKLCH Theme Architecture
    ========================================================================== */
 
 :root,
@@ -101,47 +99,6 @@
   --chart-5: oklch(0.7 0.17 45);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not(.light) {
-    color-scheme: dark;
-    --background: oklch(0.145 0.014 180);
-    --foreground: oklch(0.985 0.002 180);
-    --card: oklch(0.195 0.014 180);
-    --card-foreground: oklch(0.985 0.002 180);
-    --popover: oklch(0.195 0.014 180);
-    --popover-foreground: oklch(0.985 0.002 180);
-    --primary: oklch(0.7 0.14 180);
-    --primary-foreground: oklch(0.145 0.014 180);
-    --secondary: oklch(0.25 0.014 180);
-    --secondary-foreground: oklch(0.985 0.002 180);
-    --muted: oklch(0.25 0.014 180);
-    --muted-foreground: oklch(0.65 0.02 180);
-    --accent: oklch(0.28 0.02 180);
-    --accent-foreground: oklch(0.985 0.002 180);
-    --destructive: oklch(0.58 0.22 27);
-    --destructive-foreground: oklch(1 0 0);
-    --border: oklch(0.28 0.014 180);
-    --input: oklch(0.28 0.014 180);
-    --ring: oklch(0.7 0.14 180);
-    --brand: oklch(0.7 0.14 180);
-    --brand-foreground: oklch(0.145 0.014 180);
-    --gradient-brand: linear-gradient(135deg, oklch(0.7 0.14 180) 0%, oklch(0.78 0.12 180) 100%);
-    --primary-glow: oklch(0.7 0.14 180 / 0.25);
-    --sidebar-background: oklch(0.165 0.014 180);
-    --sidebar-foreground: oklch(0.65 0.02 180);
-    --sidebar-primary: oklch(0.7 0.14 180);
-    --sidebar-primary-foreground: oklch(0.145 0.014 180);
-    --sidebar-accent: oklch(0.28 0.02 180);
-    --sidebar-accent-foreground: oklch(0.985 0.002 180);
-    --sidebar-border: oklch(0.28 0.014 180);
-    --sidebar-ring: oklch(0.7 0.14 180);
-  }
-}
-
-/* ==========================================================================
-   Base Layer
-   ========================================================================== */
-
 @layer base {
   * { border-color: var(--border); }
   body {
@@ -160,10 +117,6 @@
     font-family: var(--font-heading);
   }
 }
-
-/* ==========================================================================
-   Utility Classes
-   ========================================================================== */
 
 .card-glass {
   background: var(--card);
@@ -190,10 +143,6 @@
   transform: translateY(-1px);
 }
 
-/* ==========================================================================
-   Scrollbar
-   ========================================================================== */
-
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
@@ -202,23 +151,10 @@
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-/* ==========================================================================
-   Animations
-   ========================================================================== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to   { opacity: 1; transform: scale(1); }
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in  { animation: fadeIn  0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-fade-in  { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-scale-in { animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

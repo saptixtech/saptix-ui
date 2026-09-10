@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconCheck, IconChevronDown, IconSearch } from "@tabler/icons-react";
+import { Check as IconCheck, ChevronDown as IconChevronDown, Search as IconSearch } from 'lucide-react';
 
 export interface ComboboxOption {
   value: string;

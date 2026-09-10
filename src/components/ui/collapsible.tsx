@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconChevronRight } from "@tabler/icons-react";
+import { ChevronRight as IconChevronRight } from 'lucide-react';
 
 export function Collapsible({ open, onOpenChange, className, children }: { open?: boolean; onOpenChange?: (o: boolean) => void; className?: string; children: React.ReactNode }) {
   const [internalOpen, setInternalOpen] = React.useState(open ?? false);

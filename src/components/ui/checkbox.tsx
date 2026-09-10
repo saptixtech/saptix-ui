@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconCheck } from "@tabler/icons-react";
+import { Check as IconCheck } from 'lucide-react';
 
 export interface CheckboxProps {
   checked?: boolean;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconX } from "@tabler/icons-react";
+import { X as IconX } from 'lucide-react';
 
 export function Sheet({ open, onOpenChange, children }: { open: boolean; onOpenChange: (o: boolean) => void; children: React.ReactNode }) {
   if (!open) return null;

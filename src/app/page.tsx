@@ -1,4 +1,8 @@
-"use client"
+'use client';
+
+import { AppShell } from "@/components/layout/app-shell/AppShell"
+import { UI_NAV_SECTIONS } from "@/components/layout/app-shell/saptix-navigation"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -55,41 +59,14 @@ export default function Dashboard() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
-        {/* Header */}
-        <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-teal-700">
-                <Globe className="h-4 w-4 text-white" />
-              </div>
-              <div>
-                <span className="font-bold tracking-tight text-foreground">Saptix</span>
-                <span className="ml-1.5 text-sm text-muted-foreground">AI Admin Portal</span>
-              </div>
-              <Badge variant="secondary" className="ml-2 text-xs">shadcn/ui</Badge>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="dark-mode" className="text-xs text-muted-foreground">Dark</Label>
-                <Switch id="dark-mode" checked={darkMode} onCheckedChange={setDarkMode} />
-              </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 500) }}>
-                    <RefreshCw className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Refresh gateway data</TooltipContent>
-              </Tooltip>
-              <Button variant="secondary" size="sm" asChild>
-                <a href="https://gate.saptix.tech" target="_blank" rel="noopener">Open Gateway</a>
-              </Button>
-            </div>
-          </div>
-        </header>
-
-        <main className="mx-auto max-w-7xl space-y-6 p-4 md:p-6">
+      <AppShell
+        appName="Saptix UI Portal"
+        appBadge="v3.0 UI"
+        subdomain="UI"
+        sections={UI_NAV_SECTIONS}
+        footerNote="Design System & OKLCH Engine"
+      >
+        <div className="space-y-6">
           {/* Stat Cards */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {STAT_CARDS.map((card) => {
@@ -237,8 +214,8 @@ export default function Dashboard() {
               </div>
             </TabsContent>
           </Tabs>
-        </main>
-      </div>
+        </div>
+      </AppShell>
     </TooltipProvider>
   )
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { IconSearch } from "@tabler/icons-react";
+import { Search as IconSearch } from 'lucide-react';
 
 export function Command({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
