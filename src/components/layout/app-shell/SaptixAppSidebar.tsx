@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
-  PanelLeft, PanelLeftClose, ExternalLink 
+  PanelLeftClose, PanelLeft, ExternalLink, type LucideIcon
 } from "lucide-react";
 import { LogoSvg } from "./LogoSvg";
 
@@ -12,7 +12,7 @@ export interface NavItem {
   id: string;
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   badge?: string;
   isExternal?: boolean;
   external?: boolean;
@@ -28,15 +28,15 @@ export interface SaptixAppSidebarProps {
   appName: string;
   appBadge?: string;
   sections: NavSection[];
-  collapsed: boolean;
-  onToggleCollapse: () => void;
-  mobileOpen: boolean;
-  onCloseMobile: () => void;
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
   footerNote?: string;
 }
 
 export function SaptixAppSidebar({
-  appName = "Saptix",
+  appName = "Saptix Suite",
   appBadge,
   sections = [],
   collapsed = false,
@@ -51,7 +51,7 @@ export function SaptixAppSidebar({
     <div className="flex flex-col h-full bg-card border-r border-border select-none relative">
       {/* Brand Header */}
       <div className={`flex items-center h-14 border-b border-border px-3 shrink-0 ${collapsed ? "justify-center" : "justify-between"}`}>
-        <div className="flex items-center gap-2.5 min-w-0">
+        <a href="/" className="flex items-center gap-2.5 min-w-0 cursor-pointer">
           <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center p-1.5 shrink-0">
             <LogoSvg className="size-full" />
           </div>
@@ -67,7 +67,7 @@ export function SaptixAppSidebar({
               )}
             </div>
           )}
-        </div>
+        </a>
 
         {/* Mobile Close Button */}
         {mobileOpen && (
@@ -82,7 +82,7 @@ export function SaptixAppSidebar({
         )}
       </div>
 
-      {/* Navigation Items (Proper overflow handling when collapsed to prevent tooltip clipping) */}
+      {/* Navigation Items */}
       <nav className={`flex-1 px-2.5 py-3 space-y-4 ${collapsed ? "overflow-x-visible overflow-y-auto scrollbar-none" : "overflow-y-auto scrollbar-thin"}`}>
         {sections.map((section, sIdx) => (
           <div key={sIdx} className="space-y-1">
@@ -127,7 +127,6 @@ export function SaptixAppSidebar({
                       </>
                     )}
 
-                    {/* Collapsed Tooltip Hover with High Z-Index & Clean Positioning */}
                     {collapsed && (
                       <div className="fixed left-[72px] px-2.5 py-1 rounded-md bg-popover text-popover-foreground text-xs font-medium border border-border shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-[100] whitespace-nowrap">
                         {item.label}
@@ -164,23 +163,28 @@ export function SaptixAppSidebar({
         ))}
       </nav>
 
-      {/* Footer User Info & Collapse Toggle */}
+      {/* Footer User Info (Clickable link to SSO Account) & Collapse Toggle */}
       <div className="p-2 border-t border-border shrink-0 space-y-1.5 bg-muted/20">
-        {/* User Card */}
-        <div className={`flex items-center gap-2 p-1.5 rounded-xl bg-card border border-border/60 shadow-2xs ${collapsed ? "justify-center" : ""}`}>
-          <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+        <a
+          href="https://account.saptix.tech"
+          className={`flex items-center gap-2 p-1.5 rounded-xl bg-card border border-border/60 shadow-2xs hover:border-primary/40 hover:bg-accent/50 transition-all cursor-pointer group ${collapsed ? "justify-center" : ""}`}
+          title="Manage SSO Profile in Account Portal"
+        >
+          <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 group-hover:ring-1 group-hover:ring-primary/40">
             <span className="text-[10px] font-bold text-primary">SA</span>
           </div>
           {!collapsed && (
             <div className="flex flex-col min-w-0 flex-1">
-              <span className="text-xs font-semibold text-foreground truncate">Admin Saptix</span>
+              <span className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                Saptix Account
+              </span>
               <span className="text-[10px] text-muted-foreground font-mono truncate">{footerNote}</span>
             </div>
           )}
           {!collapsed && (
             <span className="size-2 rounded-full bg-emerald-500 shrink-0" title="Active SSO Session" />
           )}
-        </div>
+        </a>
 
         {/* Collapse Button */}
         <button
@@ -200,7 +204,6 @@ export function SaptixAppSidebar({
 
   return (
     <>
-      {/* Mobile Drawer Overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
@@ -208,7 +211,6 @@ export function SaptixAppSidebar({
         />
       )}
 
-      {/* Mobile Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full w-64 z-50 md:hidden transition-transform duration-300 ease-in-out ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
@@ -217,7 +219,6 @@ export function SaptixAppSidebar({
         {sidebarContent}
       </aside>
 
-      {/* Desktop Sticky Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full z-20 hidden md:block transition-all duration-300 ease-in-out ${
           collapsed ? "w-[68px]" : "w-64"

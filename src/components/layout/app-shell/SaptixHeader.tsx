@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { 
   Sun, Moon, PanelLeft, Layers, Check, ExternalLink,
-  ChevronDown, LogOut, User, ShieldCheck, Activity
+  ChevronDown, LogOut, User, ShieldCheck
 } from "lucide-react";
 import { LogoSvg } from "./LogoSvg";
 import { SAPTIX_PORTAL_TABS, SAPTIX_APPS } from "./saptix-navigation";
@@ -87,8 +87,8 @@ export function SaptixHeader({
           <PanelLeft className="size-4" />
         </button>
 
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="size-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center p-1 shrink-0">
+        <a href="/" className="flex items-center gap-2 min-w-0 group cursor-pointer">
+          <div className="size-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center p-1 shrink-0 group-hover:scale-105 transition-transform">
             <LogoSvg className="size-full" />
           </div>
           <span className="text-sm font-bold tracking-tight text-foreground truncate max-w-[130px] sm:max-w-[190px] md:max-w-[240px]">
@@ -99,10 +99,10 @@ export function SaptixHeader({
               {appBadge}
             </span>
           )}
-        </div>
+        </a>
       </div>
 
-      {/* Middle: Universal 9-Stake Quick Portal Tabs (Clean, Scrollable, Non-Colliding) */}
+      {/* Middle: Universal 9-Stake Quick Portal Tabs */}
       <div className="hidden lg:flex items-center justify-center flex-1 min-w-0 px-2 sm:px-4">
         <nav className="flex items-center gap-1 bg-muted/40 p-1 rounded-xl border border-border/40 overflow-x-auto scrollbar-none max-w-full">
           {SAPTIX_PORTAL_TABS.map((tab) => {
@@ -124,22 +124,9 @@ export function SaptixHeader({
         </nav>
       </div>
 
-      {/* Right: Telemetry Badge + Apps Switcher + Theme Toggle + User SSO Profile */}
+      {/* Right: Apps Switcher + Theme Toggle + User SSO Profile */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* Live System Status Indicator (Adaptive width) */}
-        <div className="hidden 2xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 text-[11px] font-medium shrink-0">
-          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>System: Optimal • 18ms</span>
-        </div>
-        <div 
-          className="hidden md:flex 2xl:hidden items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 dark:text-emerald-400 text-[11px] font-medium shrink-0 cursor-default"
-          title="System: Optimal • 18ms (Saptix Edge Node)"
-        >
-          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>18ms</span>
-        </div>
-
-        {/* 12-App Ecosystem Switcher */}
+        {/* 9-App Ecosystem Switcher */}
         <div className="relative">
           <button
             type="button"
@@ -160,7 +147,7 @@ export function SaptixHeader({
                 <div className="px-2 py-1.5 border-b border-border/60 mb-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-foreground">Saptix Connected Ecosystem</span>
-                    <span className="text-[10px] text-muted-foreground font-mono">12 Apps</span>
+                    <span className="text-[10px] text-muted-foreground font-mono">9 Apps</span>
                   </div>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
                     Unified enterprise SSO navigation across active services
@@ -228,8 +215,8 @@ export function SaptixHeader({
               <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
               <div className="absolute right-0 top-full mt-1.5 w-60 rounded-2xl border border-border bg-popover/95 backdrop-blur-xl p-2 shadow-2xl z-50 animate-in fade-in-50 zoom-in-95 duration-150">
                 <div className="px-2.5 py-2 border-b border-border/60 mb-1">
-                  <p className="text-xs font-semibold text-foreground">Admin Saptix</p>
-                  <p className="text-[10px] text-muted-foreground truncate font-mono">admin@saptix.tech</p>
+                  <p className="text-xs font-semibold text-foreground">Saptix Enterprise User</p>
+                  <p className="text-[10px] text-muted-foreground truncate font-mono">Enterprise SSO</p>
                   <span className="inline-block mt-1 text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-mono">Enterprise SSO Active</span>
                 </div>
                 <div className="space-y-0.5">
@@ -241,7 +228,7 @@ export function SaptixHeader({
                     <span>Account & Profile</span>
                   </a>
                   <a
-                    href="https://account.saptix.tech"
+                    href="https://account.saptix.tech/?tab=security"
                     className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-foreground cursor-pointer rounded-lg hover:bg-muted transition-colors"
                   >
                     <ShieldCheck className="size-3.5 text-muted-foreground" />
