@@ -7,15 +7,19 @@ export default function Login() {
     <LoginPage
       subdomain="UI Portal"
       onSubmit={async (email, password) => {
+        const trimmedEmail = email.toLowerCase().trim();
+        if (!trimmedEmail.endsWith('@saptix.com')) {
+          throw new Error('Access to UI Portal is strictly restricted to @saptix.com domain accounts only.');
+        }
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email: trimmedEmail, password }),
         });
         const data = await res.json();
         if (!res.ok) {
-          throw new Error(data.error || 'Invalid email or password');
+          throw new Error(data.error || 'Invalid credentials');
         }
         if (data.token) {
           try {

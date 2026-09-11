@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const CURRENT_STAKE = 'ui';
-const ALLOWED_ROLES: string[] = ['admin', 'developer'];
-
 function parseJwt(token: string) {
   try {
     const base64Url = token.split('.')[1];
@@ -24,7 +21,6 @@ function parseJwt(token: string) {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Bypass public auth endpoints, static assets, and favicon
   if (
     pathname.startsWith('/login') ||
     pathname.startsWith('/auth') ||
@@ -36,7 +32,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Check for central auth session cookie (saptix_token)
   const token = request.cookies.get('saptix_token')?.value;
   if (!token) {
     const loginUrl = new URL('/login', request.url);
@@ -44,23 +39,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 3. Verify JWT payload & expiration
   const payload = parseJwt(token);
-  if (!payload || !payload.role || (payload.exp && Date.now() >= payload.exp * 1000)) {
+  if (!payload || !payload.email || (payload.exp && Date.now() >= payload.exp * 1000)) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('error', 'session_expired');
     return NextResponse.redirect(loginUrl);
   }
 
-  // 4. Role Authorization: Admin has universal access
-  if (payload.role === 'admin') {
-    return NextResponse.next();
-  }
-
-  // 5. Stake-Wise Authorization Check
-  if (!ALLOWED_ROLES.includes(payload.role)) {
+  // RESTRICTION: Only *@saptix.com domain accounts allowed
+  const email = (payload.email || '').toLowerCase().trim();
+  if (!email.endsWith('@saptix.com')) {
     const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('error', 'unauthorized_stake');
+    loginUrl.searchParams.set('error', 'domain_restricted');
     return NextResponse.redirect(loginUrl);
   }
 
