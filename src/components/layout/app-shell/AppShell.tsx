@@ -68,7 +68,7 @@ export function AppShell({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors">
+    <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors overflow-x-hidden">
       {/* Unified Saptix Sidebar */}
       <SaptixAppSidebar
         appName={appName}
@@ -81,9 +81,9 @@ export function AppShell({
         footerNote={footerNote}
       />
 
-      {/* Main Container offset by sidebar width */}
+      {/* Main Container offset by sidebar width with min-w-0 to prevent table & box blowout */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+        className={`flex-1 flex flex-col min-w-0 overflow-x-hidden transition-all duration-300 ease-in-out ${
           collapsed ? "md:ml-[68px]" : "md:ml-64"
         } ml-0`}
       >
@@ -96,8 +96,8 @@ export function AppShell({
           sidebarCollapsed={collapsed}
         />
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 container mx-auto max-w-7xl w-full">
+        {/* Dynamic Page Content with responsive breathing room */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 container mx-auto max-w-7xl w-full min-w-0">
           {children}
         </main>
 

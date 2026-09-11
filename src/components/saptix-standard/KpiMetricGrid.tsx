@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { TrendingUpIcon, TrendingDownIcon, MinusIcon } from "lucide-react";
 
 export interface KpiMetric {
@@ -18,7 +19,7 @@ interface KpiMetricGridProps {
 export function KpiMetricGrid({ metrics }: KpiMetricGridProps) {
   const visible = metrics.slice(0, 6);
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
       {visible.map((m) => (
         <KpiCard key={m.id} metric={m} />
       ))}
@@ -33,41 +34,43 @@ function KpiCard({ metric: m }: { metric: KpiMetric }) {
   const hasChange = typeof m.change === "number";
 
   return (
-    <div className="group relative flex flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-default">
-      {/* Label */}
-      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
-        {m.label}
-      </p>
+    <div className="group relative flex flex-col justify-between gap-2.5 rounded-xl border border-border bg-card p-4 shadow-xs hover:shadow-md hover:border-border/80 transition-all duration-200 hover:-translate-y-0.5 cursor-default min-w-0">
+      <div className="space-y-1.5 min-w-0">
+        {/* Label */}
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider truncate">
+          {m.label}
+        </p>
 
-      {/* Value */}
-      <p className="text-2xl font-bold font-[tabular-nums] text-foreground leading-none">
-        {m.prefix}{m.value}{m.suffix}
-      </p>
+        {/* Value */}
+        <p className="text-2xl font-bold font-[tabular-nums] text-foreground leading-tight tracking-tight truncate">
+          {m.prefix}{m.value}{m.suffix}
+        </p>
+      </div>
 
-      {/* Change badge + Progress */}
-      <div className="flex items-center justify-between gap-2 mt-auto">
-        {hasChange && (
+      {/* Change pill */}
+      {hasChange && (
+        <div className="flex items-center gap-1.5 pt-1">
           <span
-            className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+            className={`inline-flex items-center gap-0.5 text-xs font-semibold px-2 py-0.5 rounded-full ${
               isUp
-                ? "bg-emerald-500/12 text-emerald-600 dark:text-emerald-400"
+                ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
                 : isDown
-                ? "bg-red-500/12 text-red-600 dark:text-red-400"
+                ? "bg-red-500/15 text-red-600 dark:text-red-400"
                 : "bg-muted text-muted-foreground"
             }`}
           >
-            {isUp && <TrendingUpIcon className="h-2.5 w-2.5" />}
-            {isDown && <TrendingDownIcon className="h-2.5 w-2.5" />}
-            {isFlat && <MinusIcon className="h-2.5 w-2.5" />}
-            {isUp && "+"}{m.change}%
+            {isUp && <TrendingUpIcon className="h-3 w-3" />}
+            {isDown && <TrendingDownIcon className="h-3 w-3" />}
+            {isFlat && <MinusIcon className="h-3 w-3" />}
+            {isUp ? `+${m.change}%` : isDown ? `${m.change}%` : "0%"}
           </span>
-        )}
-        {!hasChange && <span />}
-      </div>
+          <span className="text-[11px] text-muted-foreground">vs prev period</span>
+        </div>
+      )}
 
       {/* Progress bar */}
       {typeof m.progress === "number" && (
-        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+        <div className="w-full bg-muted/60 rounded-full h-1.5 overflow-hidden mt-1">
           <div
             className={`h-full rounded-full transition-all duration-700 ease-out ${
               m.progress >= 80

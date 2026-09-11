@@ -42,7 +42,7 @@ import type { NavSection } from "./SaptixAppSidebar";
 // 1. Account Workspace Navigation
 export const ACCOUNT_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Identity & Credentials",
+    title: "Identity & Credentials",
     items: [
       { id: "profile", label: "Profile & Identity", href: "/", icon: User },
       { id: "tokens", label: "API Tokens & Secrets", href: "/?tab=tokens", icon: Key, badge: "3 Active" },
@@ -51,14 +51,14 @@ export const ACCOUNT_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Connected Saptix Suite",
+    title: "Connected Saptix Suite",
     items: [
-      { id: "admin", label: "Admin Console", href: "https://admin.saptix.tech", icon: Shield, external: true },
-      { id: "lead", label: "Lead OS Web", href: "https://lead.saptix.tech", icon: TrendingUp, external: true },
-      { id: "modeler", label: "Modeler Studio", href: "https://modeler.saptix.tech", icon: LayoutGrid, external: true },
-      { id: "chat", label: "AI Chat Assistant", href: "https://chat.saptix.tech", icon: MessageSquare, external: true },
-      { id: "spectra", label: "Spectra Engine", href: "https://spectra.saptix.tech", icon: Activity, external: true },
-      { id: "agent", label: "Agentic Platform", href: "https://agent.saptix.tech", icon: Bot, external: true },
+      { id: "admin", label: "Admin Console", href: "https://admin.saptix.tech", icon: Shield, isExternal: true },
+      { id: "lead", label: "Lead OS Web", href: "https://lead.saptix.tech", icon: TrendingUp, isExternal: true },
+      { id: "modeler", label: "Modeler Studio", href: "https://modeler.saptix.tech", icon: LayoutGrid, isExternal: true },
+      { id: "chat", label: "AI Chat Assistant", href: "https://chat.saptix.tech", icon: MessageSquare, isExternal: true },
+      { id: "spectra", label: "Spectra Engine", href: "https://spectra.saptix.tech", icon: Activity, isExternal: true },
+      { id: "agent", label: "Agentic Platform", href: "https://agent.saptix.tech", icon: Bot, isExternal: true },
     ],
   },
 ];
@@ -66,7 +66,7 @@ export const ACCOUNT_NAV_SECTIONS: NavSection[] = [
 // 2. Lead OS Navigation
 export const LEAD_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Revenue Pipeline",
+    title: "Revenue Pipeline",
     items: [
       { id: "overview", label: "Pipeline Overview", href: "/", icon: LayoutDashboard },
       { id: "orders", label: "Orders & Transactions", href: "/dashboard/orders", icon: Receipt, badge: "Live" },
@@ -75,7 +75,7 @@ export const LEAD_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Autonomous Swarms",
+    title: "Autonomous Swarms",
     items: [
       { id: "radar", label: "Lead Radar & Signals", href: "/dashboard/orders?tab=signals", icon: Activity, badge: "Active" },
       { id: "hermes", label: "Hermes Outreach", href: "/dashboard/orders?tab=hermes", icon: Mail },
@@ -83,9 +83,9 @@ export const LEAD_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "System",
+    title: "System",
     items: [
-      { id: "account", label: "Account & Keys", href: "https://account.saptix.tech", icon: Key, external: true },
+      { id: "account", label: "Account & Keys", href: "https://account.saptix.tech", icon: Key, isExternal: true },
       { id: "settings", label: "Pipeline Settings", href: "/dashboard/orders?tab=settings", icon: Settings },
     ],
   },
@@ -94,7 +94,7 @@ export const LEAD_NAV_SECTIONS: NavSection[] = [
 // 3. AI Chat Navigation
 export const CHAT_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "AI Assistant",
+    title: "AI Assistant",
     items: [
       { id: "chat", label: "Active Conversation", href: "/", icon: MessageSquare, badge: "Live" },
       { id: "prompts", label: "Prompt Library", href: "/prompts", icon: Sparkles },
@@ -102,17 +102,17 @@ export const CHAT_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Knowledge & Data",
+    title: "Knowledge & Data",
     items: [
       { id: "documents", label: "Enterprise Knowledge", href: "/documents", icon: FileText },
       { id: "history", label: "Prompt History Archive", href: "/history", icon: History },
     ],
   },
   {
-    heading: "Ecosystem",
+    title: "Ecosystem",
     items: [
-      { id: "agent", label: "Agentic Platform", href: "https://agent.saptix.tech", icon: Bot, external: true },
-      { id: "spectra", label: "Spectra Telemetry", href: "https://spectra.saptix.tech", icon: Activity, external: true },
+      { id: "agent", label: "Agentic Platform", href: "https://agent.saptix.tech", icon: Bot, isExternal: true },
+      { id: "spectra", label: "Spectra Telemetry", href: "https://spectra.saptix.tech", icon: Activity, isExternal: true },
       { id: "settings", label: "Chat Settings", href: "/settings", icon: Settings },
     ],
   },
@@ -121,7 +121,7 @@ export const CHAT_NAV_SECTIONS: NavSection[] = [
 // 4. UI Portal Navigation
 export const UI_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Design Architecture",
+    title: "Design Architecture",
     items: [
       { id: "components", label: "Component Suite", href: "/", icon: Palette, badge: "60+" },
       { id: "tokens", label: "OKLCH Tokens", href: "/tokens", icon: Sparkles },
@@ -129,17 +129,17 @@ export const UI_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Gateway & Service",
+    title: "Gateway & Service",
     items: [
       { id: "models", label: "Gateway Model Router", href: "/models", icon: Cpu, badge: "104" },
       { id: "providers", label: "Provider Connections", href: "/providers", icon: Database, badge: "141" },
     ],
   },
   {
-    heading: "Suite Links",
+    title: "Suite Links",
     items: [
-      { id: "account", label: "Account Portal", href: "https://account.saptix.tech", icon: User, external: true },
-      { id: "admin", label: "Admin Console", href: "https://admin.saptix.tech", icon: Shield, external: true },
+      { id: "account", label: "Account Portal", href: "https://account.saptix.tech", icon: User, isExternal: true },
+      { id: "admin", label: "Admin Console", href: "https://admin.saptix.tech", icon: Shield, isExternal: true },
       { id: "settings", label: "Theme Customizer Settings", href: "/settings", icon: Settings },
     ],
   },
@@ -148,7 +148,7 @@ export const UI_NAV_SECTIONS: NavSection[] = [
 // 5. Modeler Studio Navigation
 export const MODELER_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Studio Workspace",
+    title: "Studio Workspace",
     items: [
       { id: "overview", label: "Architecture Overview", href: "/dashboard/overview", icon: LayoutGrid },
       { id: "studio", label: "Canvas Modeler", href: "/studio", icon: Layers, badge: "v3" },
@@ -156,7 +156,7 @@ export const MODELER_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Enterprise Blueprint",
+    title: "Enterprise Blueprint",
     items: [
       { id: "sap", label: "SAP BTP Blueprints", href: "/dashboard/sap", icon: Database },
       { id: "templates", label: "Architecture Templates", href: "/dashboard/templates", icon: FileCode },
@@ -169,7 +169,7 @@ export const MODELER_NAV_SECTIONS: NavSection[] = [
 // 6. Spectra Navigation
 export const SPECTRA_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Executive & Telemetry",
+    title: "Executive & Telemetry",
     items: [
       { id: "dashboard", label: "Overview Dashboard", href: "/", icon: LayoutDashboard },
       { id: "topology", label: "System Topology", href: "/topology", icon: Network },
@@ -177,7 +177,7 @@ export const SPECTRA_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "SAP Module Suites",
+    title: "SAP Module Suites",
     items: [
       { id: "finance", label: "Finance (FI / AR Aging)", href: "/finance", icon: Coins },
       { id: "controlling", label: "Controlling (CO-PA)", href: "/controlling", icon: Receipt },
@@ -189,14 +189,14 @@ export const SPECTRA_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Cognitive Tools",
+    title: "Cognitive Tools",
     items: [
       { id: "sandbox", label: "BAPI Write-Back Sandbox", href: "/sandbox", icon: Terminal, badge: "TESTRUN" },
       { id: "audit", label: "Agent Audit Logs", href: "/audit", icon: FileText },
     ],
   },
   {
-    heading: "System Operations",
+    title: "System Operations",
     items: [
       { id: "tasks", label: "Operational Tasks", href: "/tasks", icon: CheckSquare, badge: "8" },
       { id: "invoice", label: "Billing & Invoices", href: "/invoice", icon: FileSpreadsheet },
@@ -209,7 +209,7 @@ export const SPECTRA_NAV_SECTIONS: NavSection[] = [
 // 7. Agentic Platform Navigation
 export const AGENT_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Agent Orchestration",
+    title: "Agent Orchestration",
     items: [
       { id: "dashboard", label: "Agents Dashboard", href: "/", icon: Bot, badge: "Live" },
       { id: "workflows", label: "Autonomous Workflows", href: "/workflows", icon: Network },
@@ -218,10 +218,10 @@ export const AGENT_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Cloud Infrastructure",
+    title: "Cloud Infrastructure",
     items: [
       { id: "providers", label: "LLM Providers & Keys", href: "/providers", icon: Cpu },
-      { id: "spectra", label: "Spectra ERP Engine", href: "https://spectra.saptix.tech", icon: Database, external: true },
+      { id: "spectra", label: "Spectra ERP Engine", href: "https://spectra.saptix.tech", icon: Database, isExternal: true },
       { id: "settings", label: "Platform Settings", href: "/settings", icon: Settings },
     ],
   },
@@ -230,7 +230,7 @@ export const AGENT_NAV_SECTIONS: NavSection[] = [
 // 8. Admin Console Navigation
 export const ADMIN_NAV_SECTIONS: NavSection[] = [
   {
-    heading: "Governance & Ops",
+    title: "Governance & Ops",
     items: [
       { id: "overview", label: "Operations Overview", href: "/dashboard/default", icon: LayoutDashboard },
       { id: "users", label: "Users & Multi-Tenants", href: "/dashboard/users", icon: Users },
@@ -239,11 +239,54 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    heading: "Security & Policy",
+    title: "Security & Policy",
     items: [
       { id: "audit", label: "Audit Trails", href: "/dashboard/audit", icon: FileText },
       { id: "security", label: "Security & Keys", href: "/dashboard/security", icon: ShieldCheck },
       { id: "settings", label: "Global Settings", href: "/dashboard/settings", icon: Settings },
     ],
   },
+];
+
+
+// Universal Saptix Portal Tabs & Ecosystem Apps
+export interface SaptixPortalTab {
+  id: string;
+  label: string;
+  href: string;
+}
+
+export interface SaptixAppDef {
+  name: string;
+  sub: string;
+  desc: string;
+  url: string;
+  icon: string;
+}
+
+export const SAPTIX_PORTAL_TABS: SaptixPortalTab[] = [
+  { id: 'hub', label: 'Hub', href: 'https://saptix.tech' },
+  { id: 'account', label: 'Account', href: 'https://account.saptix.tech' },
+  { id: 'admin', label: 'Admin', href: 'https://admin.saptix.tech' },
+  { id: 'lead', label: 'Lead OS', href: 'https://lead.saptix.tech' },
+  { id: 'modeler', label: 'Modeler', href: 'https://modeler.saptix.tech' },
+  { id: 'chat', label: 'Chat', href: 'https://chat.saptix.tech' },
+  { id: 'spectra', label: 'Spectra', href: 'https://spectra.saptix.tech' },
+  { id: 'agent', label: 'Agent', href: 'https://agent.saptix.tech' },
+  { id: 'ui', label: 'UI Suite', href: 'https://ui.saptix.tech' },
+];
+
+export const SAPTIX_APPS: SaptixAppDef[] = [
+  { name: 'Saptix Hub', sub: 'hub', desc: 'Central ecosystem hub', url: 'https://saptix.tech', icon: '🌐' },
+  { name: 'Account Portal', sub: 'account', desc: 'SSO & profile center', url: 'https://account.saptix.tech', icon: '👤' },
+  { name: 'Admin Console', sub: 'admin', desc: 'Enterprise governance', url: 'https://admin.saptix.tech', icon: '🛡️' },
+  { name: 'Lead OS', sub: 'lead', desc: 'CRM & pipeline execution', url: 'https://lead.saptix.tech', icon: '⚡' },
+  { name: 'Modeler Studio', sub: 'modeler', desc: 'Visual workflow builder', url: 'https://modeler.saptix.tech', icon: '🏗️' },
+  { name: 'AI Chat', sub: 'chat', desc: 'Cognitive assistant', url: 'https://chat.saptix.tech', icon: '💬' },
+  { name: 'Spectra ERP', sub: 'spectra', desc: 'Autonomous ERP engine', url: 'https://spectra.saptix.tech', icon: '📊' },
+  { name: 'Agent Studio', sub: 'agent', desc: 'Multi-agent orchestration', url: 'https://agent.saptix.tech', icon: '🤖' },
+  { name: 'UI Suite', sub: 'ui', desc: 'Design system & tokens', url: 'https://ui.saptix.tech', icon: '🎨' },
+  { name: 'DocAI', sub: 'docai', desc: 'Document intelligence', url: 'https://docai.saptix.tech', icon: '📄' },
+  { name: 'Foundry', sub: 'foundry', desc: 'Component laboratory', url: 'https://foundry.saptix.tech', icon: '🔬' },
+  { name: 'DataSafe', sub: 'datasafe', desc: 'Cryptographic compliance', url: 'https://datasafe.saptix.tech', icon: '🔒' },
 ];

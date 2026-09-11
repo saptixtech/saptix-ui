@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
@@ -10,9 +10,7 @@ import {
   ChevronsRightIcon,
   PencilIcon,
   Trash2Icon,
-  SearchIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { EmptyState } from "./EmptyState";
 import { FilterBar } from "./FilterBar";
 
@@ -95,16 +93,16 @@ export function StandardDataTable<T extends { id: string }>({
   function SortIcon({ col }: { col: ColumnDef<T> }) {
     if (!col.sortable) return null;
     if (sortKey !== col.accessorKey)
-      return <ChevronsUpDownIcon className="h-3 w-3 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />;
+      return <ChevronsUpDownIcon className="h-3.5 w-3.5 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />;
     return sortDir === "asc"
-      ? <ChevronUpIcon className="h-3 w-3 text-foreground" />
-      : <ChevronDownIcon className="h-3 w-3 text-foreground" />;
+      ? <ChevronUpIcon className="h-3.5 w-3.5 text-foreground" />
+      : <ChevronDownIcon className="h-3.5 w-3.5 text-foreground" />;
   }
 
   const showActions = !!(onEdit || onDelete);
 
   return (
-    <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
+    <div className="relative w-full min-w-0 rounded-xl border border-border bg-card shadow-xs overflow-hidden">
       {/* Toolbar */}
       <FilterBar
         search={search}
@@ -115,15 +113,15 @@ export function StandardDataTable<T extends { id: string }>({
         searchPlaceholder={searchableKeys.length ? `Search by ${String(searchableKeys[0])}…` : "Search…"}
       />
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      {/* Table container with horizontal scroll and min-w-0 */}
+      <div className="relative w-full min-w-0 overflow-x-auto scrollbar-thin">
+        <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b bg-muted/40">
+            <tr className="border-b border-border bg-muted/40">
               {columns.map((col) => (
                 <th
                   key={col.id}
-                  className={`px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide whitespace-nowrap select-none ${col.sortable ? "cursor-pointer group hover:text-foreground transition-colors" : ""} ${col.className ?? ""}`}
+                  className={`px-4 py-3.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap select-none ${col.sortable ? "cursor-pointer group hover:text-foreground hover:bg-muted/60 transition-colors" : ""} ${col.className ?? ""}`}
                   onClick={col.sortable ? () => toggleSort(col.accessorKey) : undefined}
                   aria-sort={
                     sortKey === col.accessorKey
@@ -138,13 +136,13 @@ export function StandardDataTable<T extends { id: string }>({
                 </th>
               ))}
               {showActions && (
-                <th className="px-4 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide w-20">
+                <th className="px-4 py-3.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24 whitespace-nowrap">
                   Actions
                 </th>
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/50">
+          <tbody className="divide-y divide-border/60">
             {paged.length === 0 ? (
               <tr>
                 <td colSpan={columns.length + (showActions ? 1 : 0)} className="py-12">
@@ -155,30 +153,34 @@ export function StandardDataTable<T extends { id: string }>({
               paged.map((row) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-muted/30 transition-colors duration-100 group/row"
+                  className="hover:bg-muted/30 transition-colors duration-150 group/row"
                 >
                   {columns.map((col) => (
-                    <td key={col.id} className={`px-4 py-3 text-sm ${col.className ?? ""}`}>
+                    <td key={col.id} className={`px-4 py-3.5 text-sm text-foreground/90 align-middle ${col.className ?? ""}`}>
                       {col.cell ? col.cell(row) : String(row[col.accessorKey] ?? "")}
                     </td>
                   ))}
                   {showActions && (
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
+                    <td className="px-4 py-3.5 text-right whitespace-nowrap align-middle">
+                      <div className="inline-flex items-center justify-end gap-1.5 opacity-80 sm:opacity-80 group-hover/row:opacity-100 transition-opacity">
                         {onEdit && (
                           <button
+                            type="button"
                             onClick={() => onEdit(row)}
-                            className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Edit"
+                            className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-border/40 hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95 transition-all"
+                            aria-label="Edit record"
+                            title="Edit"
                           >
                             <PencilIcon className="h-3.5 w-3.5" />
                           </button>
                         )}
                         {onDelete && (
                           <button
+                            type="button"
                             onClick={() => onDelete(row.id)}
-                            className="inline-flex h-7 w-7 items-center justify-center rounded-md hover:bg-red-500/10 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                            aria-label="Delete"
+                            className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 text-muted-foreground hover:text-red-600 dark:hover:text-red-400 active:scale-95 transition-all"
+                            aria-label="Delete record"
+                            title="Delete"
                           >
                             <Trash2Icon className="h-3.5 w-3.5" />
                           </button>
@@ -195,8 +197,8 @@ export function StandardDataTable<T extends { id: string }>({
 
       {/* Pagination */}
       {filtered.length > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t bg-muted/20 text-xs text-muted-foreground">
-          <span>
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-t border-border bg-muted/20 text-xs text-muted-foreground">
+          <span className="font-medium">
             {filtered.length === data.length
               ? `${filtered.length} total`
               : `${filtered.length} of ${data.length} filtered`}
@@ -204,18 +206,46 @@ export function StandardDataTable<T extends { id: string }>({
           </span>
           {totalPages > 1 && (
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage(0)} disabled={page === 0} aria-label="First page">
+              <button
+                type="button"
+                className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-border/40 hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+                onClick={() => setPage(0)}
+                disabled={page === 0}
+                aria-label="First page"
+                title="First page"
+              >
                 <ChevronsLeftIcon className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage((p) => p - 1)} disabled={page === 0} aria-label="Previous page">
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-border/40 hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+                onClick={() => setPage((p) => p - 1)}
+                disabled={page === 0}
+                aria-label="Previous page"
+                title="Previous page"
+              >
                 <ChevronLeftIcon className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage((p) => p + 1)} disabled={page >= totalPages - 1} aria-label="Next page">
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-border/40 hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={page >= totalPages - 1}
+                aria-label="Next page"
+                title="Next page"
+              >
                 <ChevronRightIcon className="h-3.5 w-3.5" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setPage(totalPages - 1)} disabled={page >= totalPages - 1} aria-label="Last page">
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-8 w-8 min-w-[32px] min-h-[32px] items-center justify-center rounded-lg border border-border/40 hover:border-border hover:bg-muted text-muted-foreground hover:text-foreground active:scale-95 disabled:opacity-40 disabled:pointer-events-none transition-all"
+                onClick={() => setPage(totalPages - 1)}
+                disabled={page >= totalPages - 1}
+                aria-label="Last page"
+                title="Last page"
+              >
                 <ChevronsRightIcon className="h-3.5 w-3.5" />
-              </Button>
+              </button>
             </div>
           )}
         </div>
