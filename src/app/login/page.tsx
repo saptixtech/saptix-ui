@@ -1,6 +1,6 @@
 'use client';
 
-import LoginPage from '@saptix/ui/src/auth/LoginPage';
+import LoginPage from '@/components/saptix/LoginPage';
 
 export default function Login() {
   return (
