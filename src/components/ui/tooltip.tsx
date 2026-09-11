@@ -1,53 +1,46 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from "react"
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import { cn } from "@/lib/utils"
 
-interface TooltipContextType { open: boolean; setOpen: (o: boolean) => void; }
-const TooltipContext = React.createContext<TooltipContextType | null>(null);
+const TooltipProvider = ({ delay, delayDuration, ...props }: any) => (
+  <TooltipPrimitive.Provider delayDuration={delayDuration ?? delay ?? 200} {...props} />
+)
 
-export function TooltipProvider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
-}
+const Tooltip = TooltipPrimitive.Root
 
-export function Tooltip({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(false);
+const TooltipTrigger = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger> & { render?: any }
+>(({ render, children, asChild, ...props }, ref) => {
+  if (render) {
+    return (
+      <TooltipPrimitive.Trigger ref={ref} asChild {...props}>
+        {render}
+      </TooltipPrimitive.Trigger>
+    )
+  }
   return (
-    <TooltipContext.Provider value={{ open, setOpen }}>
-      <div className="relative inline-flex">{children}</div>
-    </TooltipContext.Provider>
-  );
-}
-
-export function TooltipTrigger({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) {
-  const ctx = React.useContext(TooltipContext);
-  return (
-    <div
-      onMouseEnter={() => ctx?.setOpen(true)}
-      onMouseLeave={() => ctx?.setOpen(false)}
-      className="inline-flex"
-    >
+    <TooltipPrimitive.Trigger ref={ref} asChild={asChild} {...props}>
       {children}
-    </div>
-  );
-}
+    </TooltipPrimitive.Trigger>
+  )
+})
+TooltipTrigger.displayName = TooltipPrimitive.Trigger.displayName
 
-export function TooltipContent({ className, children, side = "top" }: { className?: string; children: React.ReactNode; side?: "top" | "bottom" | "left" | "right" }) {
-  const ctx = React.useContext(TooltipContext);
-  if (!ctx?.open) return null;
-
-  const sideClasses = {
-    top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-    bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-    left: "right-full top-1/2 -translate-y-1/2 mr-2",
-    right: "left-full top-1/2 -translate-y-1/2 ml-2",
-  };
-
-  return (
-    <div className={cn(
-      "absolute z-50 overflow-hidden rounded-lg border border-[#262738] bg-[#14141d] px-2.5 py-1.5 text-[11px] text-white shadow-xl whitespace-nowrap animate-fade-in",
-      sideClasses[side],
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <TooltipPrimitive.Content
+    ref={ref}
+    sideOffset={sideOffset}
+    className={cn(
+      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-xs text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
-    )}>
-      {children}
-    </div>
-  );
-}
+    )}
+    {...props}
+  />
+))
+TooltipContent.displayName = TooltipPrimitive.Content.displayName
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }

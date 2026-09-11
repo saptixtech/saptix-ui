@@ -1,66 +1,158 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+'use client'
 
-export interface ContextMenuItemProps {
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  onClick?: () => void;
-  destructive?: boolean;
+import * as React from 'react'
+import { CheckIcon, ChevronRightIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+interface ContextMenuContextType {
+  open: boolean
+  setOpen: (open: boolean) => void
+  position: { x: number; y: number }
+  setPosition: (pos: { x: number; y: number }) => void
 }
 
-export function ContextMenu({
-  items,
-  children,
-  className,
-}: {
-  items: ContextMenuItemProps[];
-  children: React.ReactNode;
-  className?: string;
-}) {
-  const [visible, setVisible] = React.useState(false);
-  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+const ContextMenuContext = React.createContext<ContextMenuContextType | null>(null)
 
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setPosition({ x: e.clientX, y: e.clientY });
-    setVisible(true);
-  };
+function ContextMenu({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = React.useState(false)
+  const [position, setPosition] = React.useState({ x: 0, y: 0 })
+
+  React.useEffect(() => {
+    const handleClose = () => setOpen(false)
+    if (open) {
+      window.addEventListener('click', handleClose)
+      window.addEventListener('contextmenu', handleClose)
+    }
+    return () => {
+      window.removeEventListener('click', handleClose)
+      window.removeEventListener('contextmenu', handleClose)
+    }
+  }, [open])
 
   return (
-    <div onContextMenu={handleContextMenu} className={cn("relative", className)}>
-      {children}
+    <ContextMenuContext.Provider value={{ open, setOpen, position, setPosition }}>
+      <div data-slot="context-menu" className="relative">
+        {children}
+      </div>
+    </ContextMenuContext.Provider>
+  )
+}
 
-      {visible && (
-        <>
-          <div className="fixed inset-0 z-50" onClick={() => setVisible(false)} />
-          <div
-            style={{ top: position.y, left: position.x }}
-            className="fixed z-50 min-w-[160px] rounded-2xl border border-border bg-card p-1.5 shadow-2xl backdrop-blur-xl animate-scale-in"
-          >
-            {items.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={idx}
-                  onClick={() => {
-                    item.onClick?.();
-                    setVisible(false);
-                  }}
-                  className={cn(
-                    "flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-medium cursor-pointer transition-colors",
-                    item.destructive
-                      ? "text-red-400 hover:bg-red-500/10"
-                      : "text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  {Icon && <Icon className="size-3.5" />}
-                  <span>{item.label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
+function ContextMenuTrigger({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  const ctx = React.useContext(ContextMenuContext)
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!ctx) return
+    ctx.setPosition({ x: e.clientX, y: e.clientY })
+    ctx.setOpen(true)
+  }
+
+  return (
+    <div
+      data-slot="context-menu-trigger"
+      onContextMenu={handleContextMenu}
+      className={className}
+      {...props}
+    >
+      {children}
     </div>
-  );
+  )
+}
+
+function ContextMenuContent({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'div'>) {
+  const ctx = React.useContext(ContextMenuContext)
+  if (!ctx || !ctx.open) return null
+
+  return (
+    <div
+      data-slot="context-menu-content"
+      style={{
+        position: 'fixed',
+        left: `${ctx.position.x}px`,
+        top: `${ctx.position.y}px`,
+        zIndex: 50,
+      }}
+      className={cn(
+        'min-w-[8rem] overflow-hidden rounded-md border border-[var(--border)] bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80 zoom-in-95',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+function ContextMenuItem({
+  className,
+  inset,
+  children,
+  onClick,
+  ...props
+}: React.ComponentProps<'div'> & { inset?: boolean }) {
+  const ctx = React.useContext(ContextMenuContext)
+
+  return (
+    <div
+      data-slot="context-menu-item"
+      onClick={(e) => {
+        onClick?.(e)
+        ctx?.setOpen(false)
+      }}
+      className={cn(
+        'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none transition-colors hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        inset && 'pl-8',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+function ContextMenuSeparator({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="context-menu-separator"
+      className={cn('-mx-1 my-1 h-px bg-[var(--border)]', className)}
+      {...props}
+    />
+  )
+}
+
+function ContextMenuLabel({
+  className,
+  inset,
+  ...props
+}: React.ComponentProps<'div'> & { inset?: boolean }) {
+  return (
+    <div
+      data-slot="context-menu-label"
+      className={cn(
+        'px-2 py-1.5 text-xs font-semibold text-foreground',
+        inset && 'pl-8',
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuLabel,
 }

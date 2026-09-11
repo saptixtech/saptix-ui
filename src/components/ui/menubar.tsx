@@ -1,52 +1,115 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+'use client'
 
-export interface MenubarMenuProps {
-  trigger: string;
-  items: { label: string; shortcut?: string; onClick?: () => void }[];
+import * as React from 'react'
+import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react'
+import { Menu as MenuPrimitive } from '@base-ui/react/menu'
+import { cn } from '@/lib/utils'
+
+function Menubar({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="menubar"
+      className={cn(
+        'flex h-9 items-center gap-1 rounded-md border border-[var(--border)] bg-background p-1 shadow-xs',
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-export function Menubar({ menus, className }: { menus: MenubarMenuProps[]; className?: string }) {
-  const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
+function MenubarMenu({ ...props }: MenuPrimitive.Root.Props) {
+  return <MenuPrimitive.Root data-slot="menubar-menu" {...props} />
+}
 
+function MenubarTrigger({
+  className,
+  ...props
+}: MenuPrimitive.Trigger.Props) {
   return (
-    <div className={cn("flex items-center gap-1 rounded-2xl border border-border bg-card p-1 shadow-md text-xs", className)}>
-      {menus.map((menu, idx) => (
-        <div key={menu.trigger} className="relative">
-          <button
-            onClick={() => setActiveIdx(activeIdx === idx ? null : idx)}
-            className={cn(
-              "px-3 py-1.5 rounded-xl font-medium transition-colors cursor-pointer",
-              activeIdx === idx ? "bg-white/10 text-white" : "text-foreground/80 hover:text-foreground hover:bg-secondary"
-            )}
-          >
-            {menu.trigger}
-          </button>
+    <MenuPrimitive.Trigger
+      data-slot="menubar-trigger"
+      className={cn(
+        'flex cursor-default select-none items-center rounded-sm px-3 py-1 text-xs font-medium outline-none hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+        className
+      )}
+      {...props}
+    />
+  )
+}
 
-          {activeIdx === idx && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setActiveIdx(null)} />
-              <div className="absolute left-0 top-full mt-1 z-50 min-w-[180px] rounded-2xl border border-border bg-card p-1.5 shadow-2xl backdrop-blur-xl animate-scale-in">
-                {menu.items.map((item, i) => (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      item.onClick?.();
-                      setActiveIdx(null);
-                    }}
-                    className="flex items-center justify-between px-3 py-1.5 rounded-xl text-foreground/80 hover:bg-secondary hover:text-foreground cursor-pointer transition-colors"
-                  >
-                    <span>{item.label}</span>
-                    {item.shortcut && (
-                      <span className="text-[10px] font-mono text-muted-foreground/80">{item.shortcut}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </>
+function MenubarContent({
+  className,
+  align = 'start',
+  alignOffset = -4,
+  sideOffset = 8,
+  ...props
+}: MenuPrimitive.Popup.Props & Pick<MenuPrimitive.Positioner.Props, 'align' | 'alignOffset' | 'sideOffset'>) {
+  return (
+    <MenuPrimitive.Portal>
+      <MenuPrimitive.Positioner
+        align={align}
+        alignOffset={alignOffset}
+        sideOffset={sideOffset}
+        className="isolate z-50 outline-none"
+      >
+        <MenuPrimitive.Popup
+          data-slot="menubar-content"
+          className={cn(
+            'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 z-50 min-w-48 overflow-hidden rounded-md border border-[var(--border)] p-1 text-xs shadow-md',
+            className
           )}
-        </div>
-      ))}
-    </div>
-  );
+          {...props}
+        />
+      </MenuPrimitive.Positioner>
+    </MenuPrimitive.Portal>
+  )
+}
+
+function MenubarItem({
+  className,
+  inset,
+  ...props
+}: MenuPrimitive.Item.Props & { inset?: boolean }) {
+  return (
+    <MenuPrimitive.Item
+      data-slot="menubar-item"
+      className={cn(
+        'relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-xs outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        inset && 'pl-8',
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function MenubarSeparator({ className, ...props }: MenuPrimitive.Separator.Props) {
+  return (
+    <MenuPrimitive.Separator
+      data-slot="menubar-separator"
+      className={cn('-mx-1 my-1 h-px bg-[var(--border)]', className)}
+      {...props}
+    />
+  )
+}
+
+function MenubarShortcut({ className, ...props }: React.ComponentProps<'span'>) {
+  return (
+    <span
+      data-slot="menubar-shortcut"
+      className={cn('ml-auto text-[10px] tracking-widest text-muted-foreground', className)}
+      {...props}
+    />
+  )
+}
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarShortcut,
 }

@@ -1,47 +1,29 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { Check as IconCheck } from 'lucide-react';
+'use client'
 
-export interface CheckboxProps {
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  id?: string;
-  className?: string;
-}
+import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox'
 
-export function Checkbox({ checked, defaultChecked = false, onCheckedChange, disabled, id, className }: CheckboxProps) {
-  const [isChecked, setIsChecked] = React.useState(checked !== undefined ? checked : defaultChecked);
+import { CheckIcon } from 'lucide-react'
 
-  React.useEffect(() => {
-    if (checked !== undefined) setIsChecked(checked);
-  }, [checked]);
+import { cn } from '@/lib/utils'
 
-  const toggle = () => {
-    if (disabled) return;
-    const next = !isChecked;
-    if (checked === undefined) setIsChecked(next);
-    onCheckedChange?.(next);
-  };
-
+function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
   return (
-    <button
-      type="button"
-      id={id}
-      role="checkbox"
-      aria-checked={isChecked}
-      disabled={disabled}
-      onClick={toggle}
+    <CheckboxPrimitive.Root
+      data-slot='checkbox'
       className={cn(
-        "peer h-4 w-4 shrink-0 rounded-md border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center",
-        isChecked
-          ? "bg-indigo-600 border-indigo-600 text-white"
-          : "border-[#262738] bg-[#14141d] text-transparent hover:border-[var(--primary)]/50",
+        'peer border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary relative flex size-4 shrink-0 items-center justify-center rounded-[4px] border shadow-xs transition-shadow outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3',
         className
       )}
+      {...props}
     >
-      <IconCheck className="w-3 h-3" strokeWidth={3} />
-    </button>
-  );
+      <CheckboxPrimitive.Indicator
+        data-slot='checkbox-indicator'
+        className='grid place-content-center text-current transition-none [&>svg]:size-3.5'
+      >
+        <CheckIcon />
+      </CheckboxPrimitive.Indicator>
+    </CheckboxPrimitive.Root>
+  )
 }
+
+export { Checkbox }

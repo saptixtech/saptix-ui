@@ -1,47 +1,44 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+'use client'
 
-interface HoverCardProps {
-  children: React.ReactNode;
+import * as React from 'react'
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover'
+import { cn } from '@/lib/utils'
+
+function HoverCard({ ...props }: PopoverPrimitive.Root.Props) {
+  return <PopoverPrimitive.Root data-slot="hover-card" {...props} />
 }
 
-export function HoverCard({ children }: HoverCardProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
+function HoverCardTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
+  return <PopoverPrimitive.Trigger data-slot="hover-card-trigger" {...props} />
+}
 
+function HoverCardContent({
+  className,
+  align = 'center',
+  side = 'bottom',
+  sideOffset = 4,
+  ...props
+}: PopoverPrimitive.Popup.Props &
+  Pick<PopoverPrimitive.Positioner.Props, 'align' | 'side' | 'sideOffset'>) {
   return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={() => setIsOpen(true)}
-      onMouseLeave={() => setIsOpen(false)}
-    >
-      {React.Children.map(children, (child) => {
-        if (!React.isValidElement(child)) return child;
-        if (child.type === HoverCardTrigger) {
-          return child;
-        }
-        if (child.type === HoverCardContent && isOpen) {
-          return child;
-        }
-        return null;
-      })}
-    </div>
-  );
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Positioner
+        align={align}
+        side={side}
+        sideOffset={sideOffset}
+        className="isolate z-50"
+      >
+        <PopoverPrimitive.Popup
+          data-slot="hover-card-content"
+          className={cn(
+            'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 z-50 w-64 rounded-lg border border-[var(--border)] p-4 text-sm shadow-xl outline-none duration-100',
+            className
+          )}
+          {...props}
+        />
+      </PopoverPrimitive.Positioner>
+    </PopoverPrimitive.Portal>
+  )
 }
 
-export function HoverCardTrigger({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("cursor-pointer", className)} {...props}>{children}</div>;
-}
-
-export function HoverCardContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn(
-        "absolute left-0 top-full z-50 mt-2 w-64 rounded-2xl border border-border bg-card p-4 text-foreground/90 shadow-2xl backdrop-blur-xl animate-fade-in",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
+export { HoverCard, HoverCardTrigger, HoverCardContent }

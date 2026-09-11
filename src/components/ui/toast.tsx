@@ -77,13 +77,13 @@ function Toaster({ toasts, dismiss }: { toasts: ToastData[]; dismiss: (id: strin
               t.variant === "success" ? "text-emerald-400"
                 : t.variant === "destructive" ? "text-red-400"
                 : t.variant === "warning" ? "text-amber-400"
-                : "text-[var(--primary)]"
+                : "text-indigo-400"
             )} stroke={1.75} />
             <div className="flex-1 min-w-0">
               <div className="font-bold text-white">{t.title}</div>
               {t.description && <div className="text-[#8e8ea8] mt-0.5">{t.description}</div>}
             </div>
-            <button onClick={() => dismiss(t.id)} className="text-[#64748b] hover:text-foreground shrink-0">
+            <button onClick={() => dismiss(t.id)} className="text-[#64748b] hover:text-white shrink-0">
               <IconX className="w-3.5 h-3.5" stroke={1.75} />
             </button>
           </div>

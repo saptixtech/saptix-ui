@@ -1,59 +1,102 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { ChevronDown as IconChevronDown } from 'lucide-react';
+'use client'
 
-export interface NavMenuItem {
-  title: string;
-  description?: string;
-  href?: string;
+import * as React from 'react'
+import { ChevronDownIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+function NavigationMenu({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'nav'>) {
+  return (
+    <nav
+      data-slot="navigation-menu"
+      className={cn('relative z-10 flex max-w-max flex-1 items-center justify-center', className)}
+      {...props}
+    >
+      {children}
+    </nav>
+  )
 }
 
-export function NavigationMenu({
-  items,
+function NavigationMenuList({
   className,
-}: {
-  items: { label: string; subItems?: NavMenuItem[] }[];
-  className?: string;
-}) {
-  const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
-
+  ...props
+}: React.ComponentProps<'ul'>) {
   return (
-    <nav className={cn("relative flex items-center gap-2 text-xs", className)}>
-      {items.map((item, idx) => (
-        <div key={item.label} className="relative">
-          <button
-            onClick={() => setActiveIdx(activeIdx === idx ? null : idx)}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-2 rounded-xl font-semibold transition-all cursor-pointer",
-              activeIdx === idx ? "bg-[var(--primary-glow)] text-[var(--primary-light)]" : "text-foreground/80 hover:text-foreground hover:bg-secondary"
-            )}
-          >
-            <span>{item.label}</span>
-            {item.subItems && <IconChevronDown className="size-3 text-muted-foreground" />}
-          </button>
+    <ul
+      data-slot="navigation-menu-list"
+      className={cn('group flex flex-1 list-none items-center justify-center gap-1', className)}
+      {...props}
+    />
+  )
+}
 
-          {item.subItems && activeIdx === idx && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setActiveIdx(null)} />
-              <div className="absolute left-0 top-full mt-2 z-50 w-72 rounded-2xl border border-border bg-card p-3 shadow-2xl backdrop-blur-xl animate-scale-in">
-                {item.subItems.map((sub) => (
-                  <a
-                    key={sub.title}
-                    href={sub.href || "#"}
-                    onClick={() => setActiveIdx(null)}
-                    className="block p-2.5 rounded-xl hover:bg-secondary transition-colors group"
-                  >
-                    <div className="font-semibold text-white group-hover:text-[var(--primary)]">{sub.title}</div>
-                    {sub.description && (
-                      <div className="text-[11px] text-muted-foreground mt-0.5 leading-snug">{sub.description}</div>
-                    )}
-                  </a>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      ))}
-    </nav>
-  );
+function NavigationMenuItem({ ...props }: React.ComponentProps<'li'>) {
+  return <li data-slot="navigation-menu-item" {...props} />
+}
+
+function NavigationMenuTrigger({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'button'>) {
+  return (
+    <button
+      data-slot="navigation-menu-trigger"
+      className={cn(
+        'group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-accent/50',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronDownIcon
+        className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
+        aria-hidden="true"
+      />
+    </button>
+  )
+}
+
+function NavigationMenuContent({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="navigation-menu-content"
+      className={cn(
+        'left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out md:absolute md:w-auto',
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function NavigationMenuLink({
+  className,
+  ...props
+}: React.ComponentProps<'a'>) {
+  return (
+    <a
+      data-slot="navigation-menu-link"
+      className={cn(
+        'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-xs',
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+export {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuContent,
+  NavigationMenuTrigger,
+  NavigationMenuLink,
 }

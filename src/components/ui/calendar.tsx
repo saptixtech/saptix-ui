@@ -1,96 +1,119 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { ChevronLeft as IconChevronLeft, ChevronRight as IconChevronRight } from 'lucide-react';
+'use client'
 
-export interface CalendarProps {
-  className?: string;
-  selected?: Date;
-  onSelect?: (date: Date) => void;
+import * as React from 'react'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+
+interface CalendarProps {
+  className?: string
+  selected?: Date
+  onSelect?: (date: Date) => void
+  disabled?: (date: Date) => boolean
 }
 
-export function Calendar({ className, selected = new Date(), onSelect }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = React.useState(new Date(selected));
+function Calendar({
+  className,
+  selected,
+  onSelect,
+  disabled,
+}: CalendarProps) {
+  const [currentMonth, setCurrentMonth] = React.useState(selected ? new Date(selected.getFullYear(), selected.getMonth(), 1) : new Date())
 
-  const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
+  const year = currentMonth.getFullYear()
+  const month = currentMonth.getMonth()
 
-  const year = currentMonth.getFullYear();
-  const month = currentMonth.getMonth();
-  const monthName = currentMonth.toLocaleString('default', { month: 'long' });
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
 
-  const totalDays = daysInMonth(year, month);
-  const startDay = firstDayOfMonth(year, month);
+  const prevMonth = () => {
+    setCurrentMonth(new Date(year, month - 1, 1))
+  }
 
-  const prevMonth = () => setCurrentMonth(new Date(year, month - 1, 1));
-  const nextMonth = () => setCurrentMonth(new Date(year, month + 1, 1));
+  const nextMonth = () => {
+    setCurrentMonth(new Date(year, month + 1, 1))
+  }
 
-  const isToday = (d: number) => {
-    const today = new Date();
-    return today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
-  };
+  const days = []
+  for (let i = 0; i < firstDay; i++) {
+    days.push(null)
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    days.push(new Date(year, month, d))
+  }
 
-  const isSelected = (d: number) => {
-    return selected.getDate() === d && selected.getMonth() === month && selected.getFullYear() === year;
-  };
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
 
-  const daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const isSameDay = (d1?: Date, d2?: Date) => {
+    if (!d1 || !d2) return false
+    return (
+      d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+    )
+  }
+
+  const isToday = (d: Date) => isSameDay(d, new Date())
 
   return (
-    <div className={cn("p-4 rounded-2xl bg-card border border-border shadow-xl w-72 text-foreground/90", className)}>
-      {/* Month Navigation */}
-      <div className="flex items-center justify-between mb-3">
-        <button
-          onClick={prevMonth}
-          className="size-7 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground"
-        >
-          <IconChevronLeft className="size-4" />
-        </button>
-        <span className="text-xs font-bold text-white">
-          {monthName} {year}
-        </span>
-        <button
-          onClick={nextMonth}
-          className="size-7 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:bg-secondary hover:text-foreground"
-        >
-          <IconChevronRight className="size-4" />
-        </button>
+    <div data-slot="calendar" className={cn('p-3 bg-[var(--card)] rounded-xl border border-[var(--border)] w-fit', className)}>
+      <div className="flex items-center justify-between pb-3">
+        <h4 className="text-sm font-semibold text-[var(--text-primary)]">
+          {monthNames[month]} {year}
+        </h4>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon-sm" onClick={prevMonth}>
+            <ChevronLeftIcon className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon-sm" onClick={nextMonth}>
+            <ChevronRightIcon className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
-      {/* Days of Week */}
-      <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-muted-foreground/80 mb-1">
-        {daysOfWeek.map((day) => (
-          <div key={day} className="py-1">{day}</div>
-        ))}
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground pb-1">
+        <span>Su</span>
+        <span>Mo</span>
+        <span>Tu</span>
+        <span>We</span>
+        <span>Th</span>
+        <span>Fr</span>
+        <span>Sa</span>
       </div>
 
-      {/* Days Grid */}
-      <div className="grid grid-cols-7 gap-1">
-        {Array.from({ length: startDay }).map((_, i) => (
-          <div key={`empty-${i}`} className="size-8" />
-        ))}
-        {Array.from({ length: totalDays }).map((_, i) => {
-          const dayNum = i + 1;
-          const selectedDay = isSelected(dayNum);
-          const today = isToday(dayNum);
+      <div className="grid grid-cols-7 gap-1 text-center text-xs">
+        {days.map((d, index) => {
+          if (!d) {
+            return <div key={`empty-${index}`} className="h-8 w-8" />
+          }
+          const isSel = isSameDay(d, selected)
+          const isTod = isToday(d)
+          const isDisabled = disabled ? disabled(d) : false
 
           return (
             <button
-              key={dayNum}
-              onClick={() => onSelect?.(new Date(year, month, dayNum))}
+              key={d.toISOString()}
+              type="button"
+              disabled={isDisabled}
+              onClick={() => onSelect?.(d)}
               className={cn(
-                "size-8 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer",
-                selectedDay
-                  ? "bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-md shadow-[var(--primary-glow)]"
-                  : today
-                  ? "border border-[var(--primary)]/50 text-[var(--primary)] font-bold"
-                  : "text-foreground/80 hover:bg-secondary hover:text-foreground"
+                'h-8 w-8 rounded-lg font-medium transition-colors flex items-center justify-center',
+                isSel && 'bg-primary text-primary-foreground hover:bg-primary/90 font-bold',
+                !isSel && isTod && 'border border-primary text-primary font-semibold',
+                !isSel && !isTod && 'hover:bg-muted text-[var(--text-primary)]',
+                isDisabled && 'opacity-30 pointer-events-none'
               )}
             >
-              {dayNum}
+              {d.getDate()}
             </button>
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }
+
+export { Calendar }
