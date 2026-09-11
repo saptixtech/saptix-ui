@@ -48,7 +48,7 @@ export function middleware(request: NextRequest) {
 
   // RESTRICTION: Only *@saptix.com domain accounts allowed
   const email = (payload.email || '').toLowerCase().trim();
-  if (!email.endsWith('@saptix.com')) {
+  if (!email.endsWith('@saptix.com') && !email.endsWith('@saptix.tech')) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('error', 'domain_restricted');
     return NextResponse.redirect(loginUrl);
