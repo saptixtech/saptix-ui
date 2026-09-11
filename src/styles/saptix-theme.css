@@ -15,8 +15,8 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Core Colors */
-  --background: #ffffff;
-  --foreground: #0f172a;
+  /* UNIFIED: using OKLCH from globals.css */ /*   --background: #ffffff; */
+  /* UNIFIED: using OKLCH from globals.css */ /*   --foreground: #0f172a; */
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: #ffffff;
@@ -96,8 +96,8 @@
 
 /* ── Dark Mode ─────────────────────────────────────────────────── */
 .dark {
-  --background: #0a0d14;
-  --foreground: #f1f5f9;
+  /* UNIFIED: using OKLCH from globals.css */ /*   --background: #0a0d14; */
+  /* UNIFIED: using OKLCH from globals.css */ /*   --foreground: #f1f5f9; */
   --card: #111827;
   --card-foreground: #f1f5f9;
   --popover: #111827;
